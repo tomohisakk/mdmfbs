@@ -15,7 +15,7 @@ class Actions(IntEnum):
 	NON = 4
 
 class MEDAEnv:
-	def __init__(self, w=8, h=8, s_modules=0, d_modules=0, test_flag=False):
+	def __init__(self, w=8, h=8, s_modules=3, d_modules=3, test_flag=False):
 		super(MEDAEnv, self).__init__()
 		assert w > 0 and h > 0
 		self.w = w
@@ -72,6 +72,10 @@ class MEDAEnv:
 
 		obs = self.get_all_obs()
 
+		print(Actions(actions[0]))
+		print(Actions(actions[1]))
+		print(self.map)
+	
 		return obs, self.rewards, self.dones, {}
 
 	def update_positions(self, actions):
@@ -134,7 +138,7 @@ class MEDAEnv:
 					obs[i][j] = 1
 #		print("main",main)
 #		print("other",other)
-		obs[main] = 2
-		obs[other] = 3
+		obs[main[1]][main[0]] = 2
+		obs[other[1]][other[1]] = 3
 
 		return obs

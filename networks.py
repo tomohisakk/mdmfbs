@@ -8,7 +8,7 @@ from torch.distributions import Categorical
 
 class DiscreteActorNetwork(nn.Module):
 	def __init__(self, n_actions, input_dims, alpha,
-				fc1_dims=128, fc2_dims=128, chkpt_dir='models/'):
+				fc1_dims=1024, fc2_dims=256, chkpt_dir='models/'):
 		super(DiscreteActorNetwork, self).__init__()
 		self.checkpoint_file = os.path.join(chkpt_dir,
 											'actor_discrete_ppo')
@@ -36,7 +36,7 @@ class DiscreteActorNetwork(nn.Module):
 
 class DiscreteCriticNetwork(nn.Module):
 	def __init__(self, input_dims, alpha,
-				fc1_dims=128, fc2_dims=128, chkpt_dir='models/'):
+				fc1_dims=1024, fc2_dims=256, chkpt_dir='models/'):
 		super(DiscreteCriticNetwork, self).__init__()
 		self.checkpoint_file = os.path.join(chkpt_dir,
 											'critic_discrete_ppo')

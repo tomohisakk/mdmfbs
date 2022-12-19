@@ -1,19 +1,19 @@
 import numpy as np
 from agent import Agent
-from vec_env import make_vec_envs
 from multi_dmfb import MEDAEnv
 
 from tensorboardX import SummaryWriter
 
 if __name__ == '__main__':
-	writer = SummaryWriter()
+	writer = SummaryWriter(log_dir="runs/tmp")
 	random_seed = 0
 	n_procs = 2
 	env = MEDAEnv()
-	N = 1024
+	N = 2048
 	batch_size = 32
-	n_epochs = 10
+	n_epochs = 3
 	alpha = 1E-4
+	env_name="tmp"
 	n_actions = env.action_space
 	agent = Agent(n_actions=n_actions, batch_size=batch_size,
 				alpha=alpha, n_epochs=n_epochs, T=N,
@@ -26,7 +26,7 @@ if __name__ == '__main__':
 	traj_length = 0
 	episode = 1
 
-	while total_steps < max_steps:
+	while True:
 		observation = env.reset()
 		done = [False] * 2
 		score = [0]*2
@@ -36,7 +36,6 @@ if __name__ == '__main__':
 			action, prob = agent.choose_action(observation)
 			observation_, reward, done, info = env.step(action)
 #			r = clip_reward(reward)
-			total_steps += 1
 			traj_length += 1
 			score += reward
 			mask = [0.0 if d else 1.0 for d in done]
@@ -47,12 +46,10 @@ if __name__ == '__main__':
 			observation = observation_
 		
 		scores += sum(score)
-
-
 		score_history.append(scores)
 		avg_score = np.mean(score_history[-100:])
 		writer.add_scalar("avg_scores", avg_score, episode)
-
-		print('Episode {} total steps {} avg score {:.1f}'.format(episode, total_steps, avg_score))
+		if episode%100==0:
+			print('Episode {} avg score {:.1f}'.format(episode, avg_score))
 		episode += 1
 	env.close()
